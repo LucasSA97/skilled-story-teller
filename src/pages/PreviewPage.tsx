@@ -6,11 +6,21 @@ import ModernTemplate from "@/components/templates/ModernTemplate";
 import ClassicTemplate from "@/components/templates/ClassicTemplate";
 import CreativeTemplate from "@/components/templates/CreativeTemplate";
 import MinimalTemplate from "@/components/templates/MinimalTemplate";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { 
+  exportToTextFile, 
+  exportToHTML 
+} from "@/services/exportService";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Download } from "lucide-react";
 
-// Lazy loading para componentes PDF pesados
+// Lazy loading para componentes PDF pesados - mantenemos por si se arregla en el futuro
 const ModernPDF = lazy(() => import("@/components/pdf/ModernPDF"));
 const ClassicPDF = lazy(() => import("@/components/pdf/ClassicPDF"));
 const CreativePDF = lazy(() => import("@/components/pdf/CreativePDF"));
@@ -21,9 +31,8 @@ const PreviewPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isDataReady, setIsDataReady] = useState(false);
-  const [pdfReady, setPdfReady] = useState(false);
   
-  // Verificar si los datos están listos para renderizar el PDF
+  // Verificar si los datos están listos para renderizar
   useEffect(() => {
     // Validar que existan los datos mínimos necesarios
     const hasPersonalInfo = cvState?.data?.personalInfo?.fullName;
@@ -38,9 +47,6 @@ const PreviewPage = () => {
       navigate("/form");
     } else {
       setIsDataReady(true);
-      // Dar tiempo para que se carguen los componentes PDF
-      // Aumentar el tiempo de espera para garantizar que todos los recursos se carguen
-      setTimeout(() => setPdfReady(true), 1000);
     }
   }, [cvState, navigate, toast]);
   
@@ -62,26 +68,46 @@ const PreviewPage = () => {
     }
   };
   
-  // Función para obtener el componente PDF correspondiente
-  const getSelectedPDFComponent = () => {
-    if (!isDataReady) return null;
+  // Función para manejar la exportación del CV
+  const handleExport = (format: 'text' | 'html') => {
+    if (!isDataReady) {
+      toast({
+        title: "No se puede exportar",
+        description: "Asegúrate de que todos los datos estén cargados correctamente",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const fileName = `${cvState.data.personalInfo.fullName.replace(/ /g, "_")}_CV`;
     
     try {
-      switch (cvState.selectedTemplate) {
-        case "modern":
-          return <ModernPDF data={cvState.data} />;
-        case "classic":
-          return <ClassicPDF data={cvState.data} />;
-        case "creative":
-          return <CreativePDF data={cvState.data} />;
-        case "minimal":
-          return <MinimalPDF data={cvState.data} />;
-        default:
-          return <ModernPDF data={cvState.data} />;
+      let success: boolean | void;
+      
+      switch (format) {
+        case 'text':
+          success = exportToTextFile(cvState.data, `${fileName}.txt`);
+          break;
+        case 'html':
+          success = exportToHTML(cvState.data, `${fileName}.html`);
+          break;
+      }
+      
+      if (success !== false) {
+        toast({
+          title: "Descarga iniciada",
+          description: "Tu CV ha sido exportado correctamente",
+        });
+      } else {
+        throw new Error("Error durante la exportación");
       }
     } catch (error) {
-      console.error("Error al renderizar el componente PDF:", error);
-      return null;
+      console.error("Error de exportación:", error);
+      toast({
+        title: "Error de exportación",
+        description: "No se pudo generar el archivo. Intenta nuevamente.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -120,52 +146,21 @@ const PreviewPage = () => {
               <h3 className="text-lg font-semibold mb-4">Acciones</h3>
               
               <div className="flex flex-col gap-3">
-                {pdfReady && (
-                  <Suspense fallback={<Button disabled className="w-full">Preparando PDF...</Button>}>
-                    {/* Envolver PDFDownloadLink en un manejador de errores */}
-                    <div className="w-full">
-                      <Button 
-                        className="w-full bg-blue-600"
-                        onClick={() => {
-                          try {
-                            // Generar el PDF mediante un enlace de descarga directa
-                            const fileName = `${cvState.data.personalInfo.fullName.replace(/ /g, "_")}_CV.pdf`;
-                            toast({
-                              title: "Preparando descarga",
-                              description: "Tu PDF se está generando, espera un momento...",
-                            });
-                            // La descarga ocurrirá a través del componente PDFDownloadLink
-                          } catch (error) {
-                            console.error("Error al iniciar la descarga:", error);
-                            toast({
-                              title: "Error al generar PDF",
-                              description: "Hubo un problema al crear tu archivo PDF. Intenta nuevamente.",
-                              variant: "destructive",
-                            });
-                          }
-                        }}
-                      >
-                        Descargar PDF
-                      </Button>
-                      
-                      {/* Ocultar PDFDownloadLink pero mantenerlo en el DOM para que maneje la descarga */}
-                      <div className="hidden">
-                        <PDFDownloadLink
-                          document={getSelectedPDFComponent()}
-                          fileName={`${cvState.data.personalInfo.fullName.replace(/ /g, "_")}_CV.pdf`}
-                        >
-                          {({ loading, error }) => (
-                            loading ? "Cargando..." : error ? "Error" : "Descargar"
-                          )}
-                        </PDFDownloadLink>
-                      </div>
-                    </div>
-                  </Suspense>
-                )}
-                
-                {!pdfReady && (
-                  <Button disabled className="w-full">Preparando generador de PDF...</Button>
-                )}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="w-full bg-blue-600">
+                      <Download className="mr-2 h-4 w-4" /> Exportar CV
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => handleExport('html')}>
+                      Exportar como HTML
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExport('text')}>
+                      Exportar como TXT
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 
                 <Button variant="outline" onClick={() => navigate("/templates")}>
                   Cambiar Plantilla
