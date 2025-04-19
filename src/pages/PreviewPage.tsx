@@ -7,7 +7,8 @@ import ClassicTemplate from "@/components/templates/ClassicTemplate";
 import CreativeTemplate from "@/components/templates/CreativeTemplate";
 import MinimalTemplate from "@/components/templates/MinimalTemplate";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 // Lazy loading para componentes PDF pesados
 const ModernPDF = lazy(() => import("@/components/pdf/ModernPDF"));
@@ -18,9 +19,31 @@ const MinimalPDF = lazy(() => import("@/components/pdf/MinimalPDF"));
 const PreviewPage = () => {
   const { cvState } = useCVContext();
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isDataReady, setIsDataReady] = useState(false);
+  
+  // Verificar si los datos están listos para renderizar el PDF
+  useEffect(() => {
+    // Validar que existan los datos mínimos necesarios
+    const hasPersonalInfo = cvState?.data?.personalInfo?.fullName;
+    const hasTemplate = cvState?.selectedTemplate;
+    
+    if (!hasPersonalInfo || !hasTemplate) {
+      toast({
+        title: "Datos incompletos",
+        description: "Por favor, completa al menos la información personal básica",
+        variant: "destructive",
+      });
+      navigate("/form");
+    } else {
+      setIsDataReady(true);
+    }
+  }, [cvState, navigate, toast]);
   
   // Selector de plantilla basado en la selección del usuario
   const renderSelectedTemplate = () => {
+    if (!isDataReady) return <div className="p-8 text-center">Cargando vista previa...</div>;
+    
     switch (cvState.selectedTemplate) {
       case "modern":
         return <ModernTemplate data={cvState.data} />;
@@ -37,6 +60,8 @@ const PreviewPage = () => {
   
   // Selector de componente PDF basado en la selección del usuario
   const getSelectedPDFComponent = () => {
+    if (!isDataReady) return null;
+    
     switch (cvState.selectedTemplate) {
       case "modern":
         return <ModernPDF data={cvState.data} />;
@@ -50,6 +75,18 @@ const PreviewPage = () => {
         return <ModernPDF data={cvState.data} />;
     }
   };
+
+  // Si los datos no están listos, no renderizar el contenido principal
+  if (!isDataReady) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center p-8">
+          <h2 className="text-xl font-semibold mb-4">Preparando tu CV...</h2>
+          <Button onClick={() => navigate("/form")}>Volver al formulario</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-10">
@@ -74,19 +111,26 @@ const PreviewPage = () => {
               <h3 className="text-lg font-semibold mb-4">Acciones</h3>
               
               <div className="flex flex-col gap-3">
-                <Suspense fallback={<Button disabled>Preparando PDF...</Button>}>
-                  <PDFDownloadLink
-                    document={getSelectedPDFComponent()}
-                    fileName={`${cvState.data.personalInfo.fullName.replace(/ /g, "_")}_CV.pdf`}
-                    className="w-full"
-                  >
-                    {({ loading }) => (
-                      <Button className="w-full bg-blue-600" disabled={loading}>
-                        {loading ? "Generando PDF..." : "Descargar PDF"}
-                      </Button>
+                {isDataReady && (
+                  <Suspense fallback={<Button disabled className="w-full">Preparando PDF...</Button>}>
+                    {getSelectedPDFComponent() && (
+                      <PDFDownloadLink
+                        document={getSelectedPDFComponent()}
+                        fileName={`${cvState.data.personalInfo.fullName.replace(/ /g, "_")}_CV.pdf`}
+                        className="w-full"
+                      >
+                        {({ loading, error }) => (
+                          <Button 
+                            className="w-full bg-blue-600" 
+                            disabled={loading || !!error}
+                          >
+                            {loading ? "Generando PDF..." : error ? "Error al generar PDF" : "Descargar PDF"}
+                          </Button>
+                        )}
+                      </PDFDownloadLink>
                     )}
-                  </PDFDownloadLink>
-                </Suspense>
+                  </Suspense>
+                )}
                 
                 <Button variant="outline" onClick={() => navigate("/templates")}>
                   Cambiar Plantilla
