@@ -21,6 +21,7 @@ const PreviewPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isDataReady, setIsDataReady] = useState(false);
+  const [pdfReady, setPdfReady] = useState(false);
   
   // Verificar si los datos están listos para renderizar el PDF
   useEffect(() => {
@@ -37,6 +38,8 @@ const PreviewPage = () => {
       navigate("/form");
     } else {
       setIsDataReady(true);
+      // Dar tiempo para que se carguen los componentes PDF
+      setTimeout(() => setPdfReady(true), 500);
     }
   }, [cvState, navigate, toast]);
   
@@ -58,7 +61,7 @@ const PreviewPage = () => {
     }
   };
   
-  // Selector de componente PDF basado en la selección del usuario
+  // Función para obtener el componente PDF correspondiente
   const getSelectedPDFComponent = () => {
     if (!isDataReady) return null;
     
@@ -111,25 +114,27 @@ const PreviewPage = () => {
               <h3 className="text-lg font-semibold mb-4">Acciones</h3>
               
               <div className="flex flex-col gap-3">
-                {isDataReady && (
+                {pdfReady && (
                   <Suspense fallback={<Button disabled className="w-full">Preparando PDF...</Button>}>
-                    {getSelectedPDFComponent() && (
-                      <PDFDownloadLink
-                        document={getSelectedPDFComponent()}
-                        fileName={`${cvState.data.personalInfo.fullName.replace(/ /g, "_")}_CV.pdf`}
-                        className="w-full"
-                      >
-                        {({ loading, error }) => (
-                          <Button 
-                            className="w-full bg-blue-600" 
-                            disabled={loading || !!error}
-                          >
-                            {loading ? "Generando PDF..." : error ? "Error al generar PDF" : "Descargar PDF"}
-                          </Button>
-                        )}
-                      </PDFDownloadLink>
-                    )}
+                    <PDFDownloadLink
+                      document={getSelectedPDFComponent()}
+                      fileName={`${cvState.data.personalInfo.fullName.replace(/ /g, "_")}_CV.pdf`}
+                      className="w-full"
+                    >
+                      {({ loading, error }) => (
+                        <Button 
+                          className="w-full bg-blue-600" 
+                          disabled={loading || !!error}
+                        >
+                          {loading ? "Generando PDF..." : error ? "Error al generar PDF" : "Descargar PDF"}
+                        </Button>
+                      )}
+                    </PDFDownloadLink>
                   </Suspense>
+                )}
+                
+                {!pdfReady && (
+                  <Button disabled className="w-full">Preparando generador de PDF...</Button>
                 )}
                 
                 <Button variant="outline" onClick={() => navigate("/templates")}>
