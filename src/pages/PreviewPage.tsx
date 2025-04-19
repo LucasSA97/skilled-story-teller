@@ -1,0 +1,117 @@
+
+import { useCVContext } from "@/context/CVContext";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import ModernTemplate from "@/components/templates/ModernTemplate";
+import ClassicTemplate from "@/components/templates/ClassicTemplate";
+import CreativeTemplate from "@/components/templates/CreativeTemplate";
+import MinimalTemplate from "@/components/templates/MinimalTemplate";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { lazy, Suspense } from "react";
+
+// Lazy loading para componentes PDF pesados
+const ModernPDF = lazy(() => import("@/components/pdf/ModernPDF"));
+const ClassicPDF = lazy(() => import("@/components/pdf/ClassicPDF"));
+const CreativePDF = lazy(() => import("@/components/pdf/CreativePDF"));
+const MinimalPDF = lazy(() => import("@/components/pdf/MinimalPDF"));
+
+const PreviewPage = () => {
+  const { cvState } = useCVContext();
+  const navigate = useNavigate();
+  
+  // Selector de plantilla basado en la selección del usuario
+  const renderSelectedTemplate = () => {
+    switch (cvState.selectedTemplate) {
+      case "modern":
+        return <ModernTemplate data={cvState.data} />;
+      case "classic":
+        return <ClassicTemplate data={cvState.data} />;
+      case "creative":
+        return <CreativeTemplate data={cvState.data} />;
+      case "minimal":
+        return <MinimalTemplate data={cvState.data} />;
+      default:
+        return <ModernTemplate data={cvState.data} />;
+    }
+  };
+  
+  // Selector de componente PDF basado en la selección del usuario
+  const getSelectedPDFComponent = () => {
+    switch (cvState.selectedTemplate) {
+      case "modern":
+        return <ModernPDF data={cvState.data} />;
+      case "classic":
+        return <ClassicPDF data={cvState.data} />;
+      case "creative":
+        return <CreativePDF data={cvState.data} />;
+      case "minimal":
+        return <MinimalPDF data={cvState.data} />;
+      default:
+        return <ModernPDF data={cvState.data} />;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-10">
+      <div className="max-w-5xl mx-auto p-6">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">Vista Previa de tu CV</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Revisa cómo se ve tu currículum con la plantilla elegida.
+            Puedes volver a editar el contenido o cambiar de plantilla si lo deseas.
+          </p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-8 mb-10">
+          <div className="lg:w-2/3 bg-white border rounded-lg shadow-md p-8 overflow-hidden">
+            <div className="max-w-[800px] mx-auto">
+              {renderSelectedTemplate()}
+            </div>
+          </div>
+          
+          <div className="lg:w-1/3">
+            <div className="bg-white border rounded-lg shadow-md p-6 mb-6">
+              <h3 className="text-lg font-semibold mb-4">Acciones</h3>
+              
+              <div className="flex flex-col gap-3">
+                <Suspense fallback={<Button disabled>Preparando PDF...</Button>}>
+                  <PDFDownloadLink
+                    document={getSelectedPDFComponent()}
+                    fileName={`${cvState.data.personalInfo.fullName.replace(/ /g, "_")}_CV.pdf`}
+                    className="w-full"
+                  >
+                    {({ loading }) => (
+                      <Button className="w-full bg-blue-600" disabled={loading}>
+                        {loading ? "Generando PDF..." : "Descargar PDF"}
+                      </Button>
+                    )}
+                  </PDFDownloadLink>
+                </Suspense>
+                
+                <Button variant="outline" onClick={() => navigate("/templates")}>
+                  Cambiar Plantilla
+                </Button>
+                
+                <Button variant="outline" onClick={() => navigate("/form")}>
+                  Editar Información
+                </Button>
+              </div>
+            </div>
+            
+            <div className="bg-white border rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold mb-4">Consejos</h3>
+              <ul className="text-gray-600 space-y-3 list-disc pl-5">
+                <li>Revisa la ortografía y gramática antes de descargar.</li>
+                <li>Asegúrate de que la información más relevante destaque.</li>
+                <li>Ajusta las secciones según el tipo de trabajo que buscas.</li>
+                <li>Usa palabras clave relevantes para tu sector profesional.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PreviewPage;
