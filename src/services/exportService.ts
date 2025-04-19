@@ -5,7 +5,7 @@ import { CVData } from "@/types";
  * Exporta los datos del CV a un archivo de texto plano
  * Esta es una solución alternativa cuando la generación de PDF falla
  */
-export const exportToTextFile = (data: CVData, filename: string): void => {
+export const exportToTextFile = (data: CVData, filename: string): boolean => {
   try {
     // Crear contenido de texto con formato
     let content = `CURRÍCULUM VITAE\n\n`;
@@ -101,7 +101,7 @@ export const exportToTextFile = (data: CVData, filename: string): void => {
  * Exporta los datos del CV a un archivo HTML
  * Esta es una solución alternativa más rica visualmente
  */
-export const exportToHTML = (data: CVData, filename: string): void => {
+export const exportToHTML = (data: CVData, filename: string): boolean => {
   try {
     // Crear contenido HTML con estilos básicos
     let content = `

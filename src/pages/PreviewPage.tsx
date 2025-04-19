@@ -82,7 +82,7 @@ const PreviewPage = () => {
     const fileName = `${cvState.data.personalInfo.fullName.replace(/ /g, "_")}_CV`;
     
     try {
-      let success: boolean | void;
+      let success = false;
       
       switch (format) {
         case 'text':
@@ -93,7 +93,7 @@ const PreviewPage = () => {
           break;
       }
       
-      if (success !== false) {
+      if (success) {
         toast({
           title: "Descarga iniciada",
           description: "Tu CV ha sido exportado correctamente",
