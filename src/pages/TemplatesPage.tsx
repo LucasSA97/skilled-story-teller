@@ -8,26 +8,30 @@ const TemplatesPage = () => {
   const { cvState, setTemplate } = useCVContext();
   const navigate = useNavigate();
   
-  const templates: { id: TemplateType; name: string; description: string }[] = [
+  const templates: { id: TemplateType; name: string; description: string, image?: string }[] = [
     {
       id: "modern",
       name: "Moderno",
       description: "Diseño limpio y profesional con elementos modernos y uso de color.",
+      image: '/public/templates/ModernTemplate.png'
     },
     {
       id: "classic",
       name: "Clásico",
       description: "Diseño tradicional y elegante, ideal para sectores conservadores.",
+      image: '/public/templates/PlantillaClasic.png'
     },
     {
       id: "creative",
       name: "Creativo",
       description: "Diseño audaz y diferente para destacar tu personalidad.",
+      image: '/public/templates/PlantillaModerna.png'
     },
     {
       id: "minimal",
       name: "Minimalista",
       description: "Diseño simple y directo centrado en el contenido y legibilidad.",
+      image: '/public/templates/MinimalistTemplate.png'
     },
   ];
 
@@ -58,7 +62,11 @@ const TemplatesPage = () => {
               <div className="h-64 bg-gray-200 border-b relative">
                 <div className="absolute inset-0 flex items-center justify-center text-gray-500">
                   {/* Reemplazar con vista previa de la plantilla */}
-                  Vista previa de la plantilla {template.name}
+                  <img 
+                    src={template.image}
+                    alt={`Vista previa de la plantilla ${template.name}`}
+                    className="object-cover h-full"
+                  />
                 </div>
               </div>
               <div className="p-6">

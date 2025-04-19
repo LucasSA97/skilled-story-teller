@@ -10,10 +10,12 @@ import TemplatesPage from "./pages/TemplatesPage";
 import PreviewPage from "./pages/PreviewPage";
 import NotFound from "./pages/NotFound";
 import { CVProvider } from "./context/CVContext";
+import { ThemeProvider } from "next-themes";
 
 const queryClient = new QueryClient();
 
 const App = () => (
+  <ThemeProvider attribute="class" defaultTheme="system">
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <CVProvider>
@@ -32,6 +34,7 @@ const App = () => (
       </CVProvider>
     </TooltipProvider>
   </QueryClientProvider>
+  </ThemeProvider>
 );
 
 export default App;
