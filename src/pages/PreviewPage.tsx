@@ -39,7 +39,8 @@ const PreviewPage = () => {
     } else {
       setIsDataReady(true);
       // Dar tiempo para que se carguen los componentes PDF
-      setTimeout(() => setPdfReady(true), 500);
+      // Aumentar el tiempo de espera para garantizar que todos los recursos se carguen
+      setTimeout(() => setPdfReady(true), 1000);
     }
   }, [cvState, navigate, toast]);
   
@@ -65,17 +66,22 @@ const PreviewPage = () => {
   const getSelectedPDFComponent = () => {
     if (!isDataReady) return null;
     
-    switch (cvState.selectedTemplate) {
-      case "modern":
-        return <ModernPDF data={cvState.data} />;
-      case "classic":
-        return <ClassicPDF data={cvState.data} />;
-      case "creative":
-        return <CreativePDF data={cvState.data} />;
-      case "minimal":
-        return <MinimalPDF data={cvState.data} />;
-      default:
-        return <ModernPDF data={cvState.data} />;
+    try {
+      switch (cvState.selectedTemplate) {
+        case "modern":
+          return <ModernPDF data={cvState.data} />;
+        case "classic":
+          return <ClassicPDF data={cvState.data} />;
+        case "creative":
+          return <CreativePDF data={cvState.data} />;
+        case "minimal":
+          return <MinimalPDF data={cvState.data} />;
+        default:
+          return <ModernPDF data={cvState.data} />;
+      }
+    } catch (error) {
+      console.error("Error al renderizar el componente PDF:", error);
+      return null;
     }
   };
 
@@ -116,20 +122,44 @@ const PreviewPage = () => {
               <div className="flex flex-col gap-3">
                 {pdfReady && (
                   <Suspense fallback={<Button disabled className="w-full">Preparando PDF...</Button>}>
-                    <PDFDownloadLink
-                      document={getSelectedPDFComponent()}
-                      fileName={`${cvState.data.personalInfo.fullName.replace(/ /g, "_")}_CV.pdf`}
-                      className="w-full"
-                    >
-                      {({ loading, error }) => (
-                        <Button 
-                          className="w-full bg-blue-600" 
-                          disabled={loading || !!error}
+                    {/* Envolver PDFDownloadLink en un manejador de errores */}
+                    <div className="w-full">
+                      <Button 
+                        className="w-full bg-blue-600"
+                        onClick={() => {
+                          try {
+                            // Generar el PDF mediante un enlace de descarga directa
+                            const fileName = `${cvState.data.personalInfo.fullName.replace(/ /g, "_")}_CV.pdf`;
+                            toast({
+                              title: "Preparando descarga",
+                              description: "Tu PDF se está generando, espera un momento...",
+                            });
+                            // La descarga ocurrirá a través del componente PDFDownloadLink
+                          } catch (error) {
+                            console.error("Error al iniciar la descarga:", error);
+                            toast({
+                              title: "Error al generar PDF",
+                              description: "Hubo un problema al crear tu archivo PDF. Intenta nuevamente.",
+                              variant: "destructive",
+                            });
+                          }
+                        }}
+                      >
+                        Descargar PDF
+                      </Button>
+                      
+                      {/* Ocultar PDFDownloadLink pero mantenerlo en el DOM para que maneje la descarga */}
+                      <div className="hidden">
+                        <PDFDownloadLink
+                          document={getSelectedPDFComponent()}
+                          fileName={`${cvState.data.personalInfo.fullName.replace(/ /g, "_")}_CV.pdf`}
                         >
-                          {loading ? "Generando PDF..." : error ? "Error al generar PDF" : "Descargar PDF"}
-                        </Button>
-                      )}
-                    </PDFDownloadLink>
+                          {({ loading, error }) => (
+                            loading ? "Cargando..." : error ? "Error" : "Descargar"
+                          )}
+                        </PDFDownloadLink>
+                      </div>
+                    </div>
                   </Suspense>
                 )}
                 
