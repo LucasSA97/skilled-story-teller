@@ -1,4 +1,3 @@
-
 import { useCVContext } from "@/context/CVContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -86,10 +85,10 @@ const PreviewPage = () => {
       
       switch (format) {
         case 'text':
-          success = exportToTextFile(cvState.data, `${fileName}.txt`);
+          success = exportToTextFile({ data: cvState.data, filename: `${fileName}.txt` });
           break;
         case 'html':
-          success = exportToHTML(cvState.data, `${fileName}.html`);
+          success = exportToHTML({ data: cvState.data, filename: `${fileName}.html` });
           break;
       }
       
