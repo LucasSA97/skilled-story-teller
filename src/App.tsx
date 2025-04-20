@@ -15,7 +15,7 @@ import { ThemeProvider } from "next-themes";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <ThemeProvider attribute="class" defaultTheme="system">
+  // <ThemeProvider attribute="class" defaultTheme="system" themes={["light", "dark"]}>
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <CVProvider>
@@ -34,7 +34,7 @@ const App = () => (
       </CVProvider>
     </TooltipProvider>
   </QueryClientProvider>
-  </ThemeProvider>
+  // </ThemeProvider>
 );
 
 export default App;

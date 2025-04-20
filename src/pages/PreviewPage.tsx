@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Download } from "lucide-react";
+import { exportToPDF } from "@/services/exports/pdfExport";
 
 // Lazy loading para componentes PDF pesados - mantenemos por si se arregla en el futuro
 const ModernPDF = lazy(() => import("@/components/pdf/ModernPDF"));
@@ -68,7 +69,7 @@ const PreviewPage = () => {
   };
   
   // Función para manejar la exportación del CV
-  const handleExport = (format: 'text' | 'html') => {
+  const handleExport = async (format: 'text' | 'html' | 'pdf') => {
     if (!isDataReady) {
       toast({
         title: "No se puede exportar",
@@ -84,6 +85,13 @@ const PreviewPage = () => {
       let success = false;
       
       switch (format) {
+        case 'pdf':
+          success = await exportToPDF({ 
+            data: cvState.data, 
+            filename: `${fileName}.pdf`, 
+            template: cvState.selectedTemplate 
+          });
+          break;
         case 'text':
           success = exportToTextFile({ data: cvState.data, filename: `${fileName}.txt` });
           break;
@@ -157,6 +165,9 @@ const PreviewPage = () => {
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleExport('text')}>
                       Exportar como TXT
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExport('pdf')}>
+                      Exportar como PDF
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
