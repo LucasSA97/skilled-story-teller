@@ -1,6 +1,6 @@
-
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, ReactNode } from "react";
 import { CVData, CVState, TemplateType } from "@/types";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 // Datos por defecto para el CV
 const defaultCVData: CVData = {
@@ -60,7 +60,7 @@ export const useCVContext = () => {
 };
 
 export const CVProvider = ({ children }: { children: ReactNode }) => {
-  const [cvState, setCVState] = useState<CVState>(defaultCVState);
+  const [cvState, setCVState] = useLocalStorage<CVState>("cv-state", defaultCVState);
 
   const updatePersonalInfo = (personalInfo: Partial<CVData["personalInfo"]>) => {
     setCVState((prev) => ({
