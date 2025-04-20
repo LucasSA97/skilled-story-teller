@@ -43,7 +43,7 @@ const LandingPage = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg -z-10 group-hover:opacity-75 transition-opacity" />
             <div className="p-6 space-y-4">
               <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <CircleUserRound className="h-6 w-6 text-primary dark:text-primary-foreground" />
+                <CircleUserRound className="h-6 w-6 text-primary dark:white" />
               </div>
               <h3 className="text-lg font-semibold">Personalización Total</h3>
               <p className="text-muted-foreground">
@@ -56,7 +56,7 @@ const LandingPage = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg -z-10 group-hover:opacity-75 transition-opacity" />
             <div className="p-6 space-y-4">
               <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Sparkles className="h-6 w-6 text-primary dark:text-primary-foreground" />
+                <Sparkles className="h-6 w-6 text-primary dark:white" />
               </div>
               <h3 className="text-lg font-semibold">Plantillas Profesionales</h3>
               <p className="text-muted-foreground">
@@ -69,7 +69,7 @@ const LandingPage = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg -z-10 group-hover:opacity-75 transition-opacity" />
             <div className="p-6 space-y-4">
               <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Download className="h-6 w-6 text-primary dark:text-primary-foreground" />
+                <Download className="h-6 w-6 text-primary dark:white" />
               </div>
               <h3 className="text-lg font-semibold">Exportación Instantánea</h3>
               <p className="text-muted-foreground">
