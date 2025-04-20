@@ -1,56 +1,83 @@
 
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { CircleUserRound, FileText, Download, Sparkles } from "lucide-react";
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white">
-      <div className="max-w-3xl px-4 text-center">
-        <h1 className="text-5xl font-bold mb-6 text-gray-800">
-          Crea tu Currículum Profesional
-        </h1>
-        <p className="text-xl text-gray-600 mb-8">
-          Diseña un currículum impresionante en minutos. Elige entre distintas plantillas 
-          y personaliza cada sección para destacar tus habilidades profesionales.
-        </p>
-        
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          <div className="bg-white rounded-lg p-6 shadow-lg flex flex-col items-center">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-background dark:from-primary/5 dark:to-background -z-10" />
+        <div className="container mx-auto px-4 py-16 lg:py-24">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent dark:from-white dark:to-white/80">
+              Tu CV Profesional en Minutos
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Crea un currículum que destaque entre la multitud. Herramientas profesionales, 
+              plantillas modernas y una experiencia intuitiva para impulsar tu carrera.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/form">
+                <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                  <FileText className="mr-2 h-5 w-5" />
+                  Crear mi CV
+                </Button>
+              </Link>
+              <Link to="/templates">
+                <Button size="lg" variant="outline">
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Ver Plantillas
+                </Button>
+              </Link>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Fácil de Usar</h3>
-            <p className="text-gray-600 text-center">Formulario intuitivo paso a paso que te guía en todo el proceso.</p>
-          </div>
-          
-          <div className="bg-white rounded-lg p-6 shadow-lg flex flex-col items-center">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Exportación PDF</h3>
-            <p className="text-gray-600 text-center">Descarga tu CV en formato PDF listo para enviar a empresas.</p>
-          </div>
-          
-          <div className="bg-white rounded-lg p-6 shadow-lg flex flex-col items-center">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Múltiples Plantillas</h3>
-            <p className="text-gray-600 text-center">Varias opciones de diseño profesional para elegir.</p>
           </div>
         </div>
-        
-        <Link to="/form">
-          <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-md text-lg transition-all duration-200 shadow-md hover:shadow-lg">
-            Crear mi CV
-          </Button>
-        </Link>
+      </div>
+
+      {/* Features Section */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg -z-10 group-hover:opacity-75 transition-opacity" />
+            <div className="p-6 space-y-4">
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                <CircleUserRound className="h-6 w-6 text-primary dark:text-primary-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold">Personalización Total</h3>
+              <p className="text-muted-foreground">
+                Adapta cada sección de tu CV a tu perfil profesional con nuestras herramientas intuitivas.
+              </p>
+            </div>
+          </div>
+
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg -z-10 group-hover:opacity-75 transition-opacity" />
+            <div className="p-6 space-y-4">
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Sparkles className="h-6 w-6 text-primary dark:text-primary-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold">Plantillas Profesionales</h3>
+              <p className="text-muted-foreground">
+                Elige entre múltiples diseños modernos y profesionales que harán destacar tu CV.
+              </p>
+            </div>
+          </div>
+
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg -z-10 group-hover:opacity-75 transition-opacity" />
+            <div className="p-6 space-y-4">
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Download className="h-6 w-6 text-primary dark:text-primary-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold">Exportación Instantánea</h3>
+              <p className="text-muted-foreground">
+                Descarga tu CV en PDF, listo para enviar a empleadores en segundos.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
