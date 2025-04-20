@@ -1,5 +1,4 @@
-
-import { Document, Page, Text, View, StyleSheet, Image, Font } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 import { CVData } from "@/types";
 
 interface ModernPDFProps {
@@ -134,142 +133,149 @@ const styles = StyleSheet.create({
   },
 });
 
-const ModernPDF = ({ data }: ModernPDFProps) => {
-  return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        {/* Header */}
-        <View style={styles.header}>
-          {data.personalInfo.photo && (
-            <View style={styles.photoContainer}>
-              <Image src={data.personalInfo.photo} style={styles.photo} />
-            </View>
-          )}
+const ModernPDF = ({ data }: { data: CVData }) => {
+  const content = (
+    <>
+      {/* Header */}
+      <View style={styles.header}>
+        {data.personalInfo.photo && (
+          <View style={styles.photoContainer}>
+            <Image src={data.personalInfo.photo} style={styles.photo} />
+          </View>
+        )}
+        
+        <View style={styles.headerRight}>
+          <Text style={styles.name}>{data.personalInfo.fullName}</Text>
+          <Text style={styles.headerDetails}>
+            {data.personalInfo.nationality && `Nacionalidad: ${data.personalInfo.nationality}`}
+            {data.personalInfo.nationality && data.personalInfo.birthDate && " | "}
+            {data.personalInfo.birthDate && `Fecha de nacimiento: ${data.personalInfo.birthDate}`}
+          </Text>
           
-          <View style={styles.headerRight}>
-            <Text style={styles.name}>{data.personalInfo.fullName}</Text>
-            <Text style={styles.headerDetails}>
-              {data.personalInfo.nationality && `Nacionalidad: ${data.personalInfo.nationality}`}
-              {data.personalInfo.nationality && data.personalInfo.birthDate && " | "}
-              {data.personalInfo.birthDate && `Fecha de nacimiento: ${data.personalInfo.birthDate}`}
-            </Text>
-            
-            <View style={styles.contactInfo}>
-              {data.contactInfo.email && (
-                <View style={styles.contactItem}>
-                  <Text>{data.contactInfo.email}</Text>
-                </View>
-              )}
-              {data.contactInfo.phone && (
-                <View style={styles.contactItem}>
-                  <Text>{data.contactInfo.phone}</Text>
-                </View>
-              )}
-              {data.contactInfo.address && (
-                <View style={styles.contactItem}>
-                  <Text>{data.contactInfo.address}</Text>
-                </View>
-              )}
-            </View>
+          <View style={styles.contactInfo}>
+            {data.contactInfo.email && (
+              <View style={styles.contactItem}>
+                <Text>{data.contactInfo.email}</Text>
+              </View>
+            )}
+            {data.contactInfo.phone && (
+              <View style={styles.contactItem}>
+                <Text>{data.contactInfo.phone}</Text>
+              </View>
+            )}
+            {data.contactInfo.address && (
+              <View style={styles.contactItem}>
+                <Text>{data.contactInfo.address}</Text>
+              </View>
+            )}
           </View>
         </View>
+      </View>
 
-        {/* Professional Summary */}
-        {data.professionalSummary && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Perfil Profesional</Text>
-            <Text style={styles.itemDescription}>{data.professionalSummary}</Text>
-          </View>
-        )}
+      {/* Professional Summary */}
+      {data.professionalSummary && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Perfil Profesional</Text>
+          <Text style={styles.itemDescription}>{data.professionalSummary}</Text>
+        </View>
+      )}
 
-        {/* Work Experience */}
-        {data.workExperience.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Experiencia Laboral</Text>
-            {data.workExperience.map((job) => (
-              <View key={job.id} style={styles.itemContainer}>
-                <View style={styles.itemHeader}>
-                  <Text style={styles.itemTitle}>{job.position}</Text>
-                  <Text style={styles.itemDate}>
-                    {job.startDate} - {job.current ? "Presente" : job.endDate}
-                  </Text>
-                </View>
-                <Text style={styles.itemSubtitle}>{job.company}, {job.location}</Text>
-                <Text style={styles.itemDescription}>{job.description}</Text>
+      {/* Work Experience */}
+      {data.workExperience.length > 0 && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Experiencia Laboral</Text>
+          {data.workExperience.map((job) => (
+            <View key={job.id} style={styles.itemContainer}>
+              <View style={styles.itemHeader}>
+                <Text style={styles.itemTitle}>{job.position}</Text>
+                <Text style={styles.itemDate}>
+                  {job.startDate} - {job.current ? "Presente" : job.endDate}
+                </Text>
               </View>
-            ))}
-          </View>
-        )}
-
-        {/* Education */}
-        {data.education.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Educación</Text>
-            {data.education.map((edu) => (
-              <View key={edu.id} style={styles.itemContainer}>
-                <View style={styles.itemHeader}>
-                  <Text style={styles.itemTitle}>{edu.degree}</Text>
-                  <Text style={styles.itemDate}>
-                    {edu.startDate} - {edu.current ? "Presente" : edu.endDate}
-                  </Text>
-                </View>
-                <Text style={styles.itemSubtitle}>{edu.institution}, {edu.location}</Text>
-                {edu.grade && <Text style={styles.itemDescription}>Calificación: {edu.grade}</Text>}
-              </View>
-            ))}
-          </View>
-        )}
-
-        {/* Skills and Languages */}
-        <View style={styles.columns}>
-          {/* Skills */}
-          {data.skills.length > 0 && (
-            <View style={styles.column}>
-              <Text style={styles.sectionTitle}>Habilidades</Text>
-              <View style={styles.skillsContainer}>
-                {data.skills.map((skill) => (
-                  <Text key={skill.id} style={styles.skill}>
-                    {skill.name}
-                  </Text>
-                ))}
-              </View>
+              <Text style={styles.itemSubtitle}>{job.company}, {job.location}</Text>
+              <Text style={styles.itemDescription}>{job.description}</Text>
             </View>
-          )}
+          ))}
+        </View>
+      )}
 
-          {/* Languages */}
-          {data.languages.length > 0 && (
-            <View style={styles.column}>
-              <Text style={styles.sectionTitle}>Idiomas</Text>
-              {data.languages.map((language) => (
-                <View key={language.id} style={styles.language}>
-                  <Text style={styles.languageName}>{language.name}</Text>
-                  <Text style={styles.languageLevel}>{language.level}</Text>
-                </View>
+      {/* Education */}
+      {data.education.length > 0 && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Educación</Text>
+          {data.education.map((edu) => (
+            <View key={edu.id} style={styles.itemContainer}>
+              <View style={styles.itemHeader}>
+                <Text style={styles.itemTitle}>{edu.degree}</Text>
+                <Text style={styles.itemDate}>
+                  {edu.startDate} - {edu.current ? "Presente" : edu.endDate}
+                </Text>
+              </View>
+              <Text style={styles.itemSubtitle}>{edu.institution}, {edu.location}</Text>
+              {edu.grade && <Text style={styles.itemDescription}>Calificación: {edu.grade}</Text>}
+            </View>
+          ))}
+        </View>
+      )}
+
+      {/* Skills and Languages */}
+      <View style={styles.columns}>
+        {/* Skills */}
+        {data.skills.length > 0 && (
+          <View style={styles.column}>
+            <Text style={styles.sectionTitle}>Habilidades</Text>
+            <View style={styles.skillsContainer}>
+              {data.skills.map((skill) => (
+                <Text key={skill.id} style={styles.skill}>
+                  {skill.name}
+                </Text>
               ))}
             </View>
-          )}
-        </View>
-
-        {/* Links */}
-        {(data.contactInfo.website || data.contactInfo.linkedin || data.contactInfo.github) && (
-          <View style={styles.links}>
-            {data.contactInfo.website && (
-              <Text style={styles.link}>
-                Web: {data.contactInfo.website.replace(/^https?:\/\/(www\.)?/, '')}
-              </Text>
-            )}
-            {data.contactInfo.linkedin && (
-              <Text style={styles.link}>
-                LinkedIn: {data.contactInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}
-              </Text>
-            )}
-            {data.contactInfo.github && (
-              <Text style={styles.link}>
-                GitHub: {data.contactInfo.github.replace(/^https?:\/\/(www\.)?/, '')}
-              </Text>
-            )}
           </View>
         )}
+
+        {/* Languages */}
+        {data.languages.length > 0 && (
+          <View style={styles.column}>
+            <Text style={styles.sectionTitle}>Idiomas</Text>
+            {data.languages.map((language) => (
+              <View key={language.id} style={styles.language}>
+                <Text style={styles.languageName}>{language.name}</Text>
+                <Text style={styles.languageLevel}>{language.level}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+      </View>
+
+      {/* Links */}
+      {(data.contactInfo.website || data.contactInfo.linkedin || data.contactInfo.github) && (
+        <View style={styles.links}>
+          {data.contactInfo.website && (
+            <Text style={styles.link}>
+              Web: {data.contactInfo.website.replace(/^https?:\/\/(www\.)?/, '')}
+            </Text>
+          )}
+          {data.contactInfo.linkedin && (
+            <Text style={styles.link}>
+              LinkedIn: {data.contactInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}
+            </Text>
+          )}
+          {data.contactInfo.github && (
+            <Text style={styles.link}>
+              GitHub: {data.contactInfo.github.replace(/^https?:\/\/(www\.)?/, '')}
+            </Text>
+          )}
+        </View>
+      )}
+    </>
+  );
+
+  // Calculate content height and split into pages if needed
+  return (
+    <Document>
+      <Page size="A4" style={[styles.page, { minHeight: '100%' }]}>
+        {content}
       </Page>
     </Document>
   );

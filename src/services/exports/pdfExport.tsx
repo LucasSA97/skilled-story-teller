@@ -5,7 +5,7 @@ import ModernPDF from '@/components/pdf/ModernPDF';
 import ClassicPDF from '@/components/pdf/ClassicPDF';
 import CreativePDF from '@/components/pdf/CreativePDF';
 import MinimalPDF from '@/components/pdf/MinimalPDF';
-import { Document, Page } from '@react-pdf/renderer';
+import { Document } from '@react-pdf/renderer';
 import { CVData, TemplateType } from '@/types';
 
 export const exportToPDF = async ({
@@ -20,7 +20,6 @@ export const exportToPDF = async ({
   try {
     let PdfComponent;
 
-    // Use the provided template parameter instead of data.selectedTemplate
     switch (template) {
       case 'modern':
         PdfComponent = ModernPDF;
@@ -38,21 +37,12 @@ export const exportToPDF = async ({
         PdfComponent = ModernPDF;
     }
 
-    // Create the PDF document with a single page to avoid blank pages
-    const pdfDoc = (
-      <Document>
-        <Page size="A4">
-          <PdfComponent data={data} />
-        </Page>
-      </Document>
-    );
-
-    // Generate the PDF blob
-    const blob = await pdf(pdfDoc).toBlob();
-
-    // Download the file using file-saver
+    // Create the PDF document
+    const blob = await pdf(<PdfComponent data={data} />).toBlob();
+    
+    // Download the file
     saveAs(blob, filename);
-
+    
     return true;
   } catch (error) {
     console.error("PDF Export Error:", error);

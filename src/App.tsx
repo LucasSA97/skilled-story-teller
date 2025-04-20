@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { CVProvider } from "./context/CVContext";
 import { ThemeToggle } from "./components/ThemeToggle";
+import Header from "./components/Header";
 
 // Import page components
 import LandingPage from "./pages/LandingPage";
@@ -23,14 +24,19 @@ const App = () => (
       <TooltipProvider>
         <CVProvider>
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/form" element={<FormPage />} />
-              <Route path="/templates" element={<TemplatesPage />} />
-              <Route path="/preview" element={<PreviewPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <ThemeToggle />
+            <div className="min-h-screen flex flex-col">
+              <Header />
+              <main className="flex-1">
+                <Routes>
+                  <Route path="/" element={<LandingPage />} />
+                  <Route path="/form" element={<FormPage />} />
+                  <Route path="/templates" element={<TemplatesPage />} />
+                  <Route path="/preview" element={<PreviewPage />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              <ThemeToggle />
+            </div>
           </BrowserRouter>
           <Toaster />
           <Sonner />
