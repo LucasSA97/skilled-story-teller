@@ -9,7 +9,8 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { 
   exportToTextFile, 
-  exportToHTML 
+  exportToHTML,
+  exportToPDF 
 } from "@/services/exportService";
 import {
   DropdownMenu,
@@ -18,7 +19,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Download } from "lucide-react";
-import { exportToPDF } from "@/services/exports/pdfExport";
 
 // Lazy loading para componentes PDF pesados - mantenemos por si se arregla en el futuro
 const ModernPDF = lazy(() => import("@/components/pdf/ModernPDF"));
@@ -88,8 +88,8 @@ const PreviewPage = () => {
         case 'pdf':
           success = await exportToPDF({ 
             data: cvState.data, 
-            filename: `${fileName}.pdf`, 
-            template: cvState.selectedTemplate 
+            filename: `${fileName}.pdf`,
+            template: cvState.selectedTemplate
           });
           break;
         case 'text':
