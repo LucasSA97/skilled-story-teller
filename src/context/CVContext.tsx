@@ -1,31 +1,8 @@
+
 import { createContext, useContext, ReactNode } from "react";
 import { CVData, CVState, TemplateType } from "@/types";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-
-// Datos por defecto para el CV
-const defaultCVData: CVData = {
-  personalInfo: {
-    fullName: "",
-    nationality: "",
-    birthDate: "",
-  },
-  contactInfo: {
-    email: "",
-    phone: "",
-    address: "",
-  },
-  professionalSummary: "",
-  workExperience: [],
-  education: [],
-  skills: [],
-  languages: [],
-};
-
-const defaultCVState: CVState = {
-  data: defaultCVData,
-  selectedTemplate: "modern",
-  currentStep: 0,
-};
+import { defaultCVState } from "./defaultState";
 
 interface CVContextType {
   cvState: CVState;
@@ -49,15 +26,7 @@ interface CVContextType {
   goToStep: (step: number) => void;
 }
 
-const CVContext = createContext<CVContextType | undefined>(undefined);
-
-export const useCVContext = () => {
-  const context = useContext(CVContext);
-  if (!context) {
-    throw new Error("useCVContext must be used within a CVProvider");
-  }
-  return context;
-};
+export const CVContext = createContext<CVContextType | undefined>(undefined);
 
 export const CVProvider = ({ children }: { children: ReactNode }) => {
   const [cvState, setCVState] = useLocalStorage<CVState>("cv-state", defaultCVState);
@@ -67,10 +36,7 @@ export const CVProvider = ({ children }: { children: ReactNode }) => {
       ...prev,
       data: {
         ...prev.data,
-        personalInfo: {
-          ...prev.data.personalInfo,
-          ...personalInfo,
-        },
+        personalInfo: { ...prev.data.personalInfo, ...personalInfo },
       },
     }));
   };
@@ -78,23 +44,14 @@ export const CVProvider = ({ children }: { children: ReactNode }) => {
   const updateContactInfo = (contactInfo: Partial<CVData["contactInfo"]>) => {
     setCVState((prev) => ({
       ...prev,
-      data: {
-        ...prev.data,
-        contactInfo: {
-          ...prev.data.contactInfo,
-          ...contactInfo,
-        },
-      },
+      data: { ...prev.data, contactInfo: { ...prev.data.contactInfo, ...contactInfo } },
     }));
   };
 
   const updateProfessionalSummary = (summary: string) => {
     setCVState((prev) => ({
       ...prev,
-      data: {
-        ...prev.data,
-        professionalSummary: summary,
-      },
+      data: { ...prev.data, professionalSummary: summary },
     }));
   };
 
@@ -282,4 +239,12 @@ export const CVProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </CVContext.Provider>
   );
+};
+
+export const useCVContext = () => {
+  const context = useContext(CVContext);
+  if (!context) {
+    throw new Error("useCVContext must be used within a CVProvider");
+  }
+  return context;
 };
