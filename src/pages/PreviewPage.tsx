@@ -1,3 +1,4 @@
+
 import { useCVContext } from "@/context/CVContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -121,9 +122,9 @@ const PreviewPage = () => {
   // Si los datos no están listos, no renderizar el contenido principal
   if (!isDataReady) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center transition-colors duration-300">
         <div className="text-center p-8">
-          <h2 className="text-xl font-semibold mb-4">Preparando tu CV...</h2>
+          <h2 className="text-xl font-semibold mb-4 text-foreground">Preparando tu CV...</h2>
           <Button onClick={() => navigate("/form")}>Volver al formulario</Button>
         </div>
       </div>
@@ -131,31 +132,31 @@ const PreviewPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10">
+    <div className="min-h-screen bg-background py-10 transition-colors duration-300">
       <div className="max-w-5xl mx-auto p-6">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">Vista Previa de tu CV</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-3xl font-bold text-foreground mb-4">Vista Previa de tu CV</h1>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             Revisa cómo se ve tu currículum con la plantilla elegida.
             Puedes volver a editar el contenido o cambiar de plantilla si lo deseas.
           </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8 mb-10">
-          <div className="lg:w-2/3 bg-white border rounded-lg shadow-md p-8 overflow-hidden">
+          <div className="lg:w-2/3 bg-card text-card-foreground border rounded-lg shadow-md p-8 overflow-hidden">
             <div className="max-w-[800px] mx-auto">
               {renderSelectedTemplate()}
             </div>
           </div>
           
           <div className="lg:w-1/3">
-            <div className="bg-white border rounded-lg shadow-md p-6 mb-6">
+            <div className="bg-card text-card-foreground border rounded-lg shadow-md p-6 mb-6">
               <h3 className="text-lg font-semibold mb-4">Acciones</h3>
               
               <div className="flex flex-col gap-3">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button className="w-full bg-blue-600">
+                    <Button className="w-full">
                       <Download className="mr-2 h-4 w-4" /> Exportar CV
                     </Button>
                   </DropdownMenuTrigger>
@@ -182,9 +183,9 @@ const PreviewPage = () => {
               </div>
             </div>
             
-            <div className="bg-white border rounded-lg shadow-md p-6">
+            <div className="bg-card text-card-foreground border rounded-lg shadow-md p-6">
               <h3 className="text-lg font-semibold mb-4">Consejos</h3>
-              <ul className="text-gray-600 space-y-3 list-disc pl-5">
+              <ul className="text-muted-foreground space-y-3 list-disc pl-5">
                 <li>Revisa la ortografía y gramática antes de descargar.</li>
                 <li>Asegúrate de que la información más relevante destaque.</li>
                 <li>Ajusta las secciones según el tipo de trabajo que buscas.</li>

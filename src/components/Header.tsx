@@ -7,7 +7,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-colors duration-300">
       <div className="container flex h-14 items-center">
         <div className="mr-4 flex">
           <Button
@@ -30,6 +30,11 @@ const Header = () => {
             <Link to="/templates">
               <Button variant="outline" size="sm">
                 Cambiar Plantilla
+              </Button>
+            </Link>
+            <Link to="/form">
+              <Button variant="outline" size="sm">
+                Editar CV
               </Button>
             </Link>
           </div>

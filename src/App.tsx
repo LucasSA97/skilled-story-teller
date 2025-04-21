@@ -24,9 +24,9 @@ const App = () => (
       <TooltipProvider>
         <CVProvider>
           <BrowserRouter>
-            {/* <div className="min-h-screen flex flex-col">
-              <Header />*/}
-              <main className="flex-1"> 
+            <div className="min-h-screen flex flex-col bg-background text-foreground">
+              <Header />
+              <main className="flex-1 pt-14"> 
                 <Routes>
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/form" element={<FormPage />} />
@@ -36,7 +36,7 @@ const App = () => (
                 </Routes>
               </main>
               <ThemeToggle />
-            {/* </div> */}
+            </div>
           </BrowserRouter>
           <Toaster />
           <Sonner />
