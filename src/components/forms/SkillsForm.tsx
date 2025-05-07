@@ -45,20 +45,20 @@ const SkillsForm = () => {
         <Label className="mb-2 block">Habilidades</Label>
         
         {skills.length === 0 ? (
-          <div className="text-center py-6 bg-gray-50 rounded-md">
-            <p className="text-gray-500">Añade habilidades relevantes para tu CV</p>
+          <div className="text-center py-6 bg-secondary/30 rounded-md">
+            <p className="text-muted-foreground">Añade habilidades relevantes para tu CV</p>
           </div>
         ) : (
           <div className="flex flex-wrap gap-2">
             {skills.map((skill) => (
               <div
                 key={skill.id}
-                className="flex items-center bg-blue-100 text-blue-800 rounded-full px-3 py-1"
+                className="flex items-center bg-primary/10 text-primary rounded-full px-3 py-1"
               >
                 <span className="mr-1">{skill.name}</span>
                 <button
                   onClick={() => removeSkill(skill.id)}
-                  className="text-blue-500 hover:text-blue-700 focus:outline-none ml-1"
+                  className="text-primary hover:text-primary/70 focus:outline-none ml-1"
                 >
                   <X size={14} />
                 </button>
@@ -68,9 +68,9 @@ const SkillsForm = () => {
         )}
       </div>
 
-      <div className="bg-blue-50 p-4 rounded-md mt-4">
-        <h3 className="text-sm font-medium text-blue-800 mb-2">Consejos para habilidades:</h3>
-        <ul className="text-sm text-blue-700 list-disc pl-5 space-y-1">
+      <div className="bg-secondary/50 dark:bg-secondary/20 p-4 rounded-md mt-4">
+        <h3 className="text-sm font-medium mb-2">Consejos para habilidades:</h3>
+        <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
           <li>Añade tanto habilidades técnicas como blandas.</li>
           <li>Incluye herramientas y tecnologías que domines.</li>
           <li>Sé específico (ej. "Adobe Photoshop" en lugar de "diseño").</li>

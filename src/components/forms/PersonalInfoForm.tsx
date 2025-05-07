@@ -84,14 +84,14 @@ const PersonalInfoForm = () => {
             />
             <label
               htmlFor="photo"
-              className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-muted-foreground cursor-pointer hover:bg-accent"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-muted-foreground cursor-pointer hover:bg-accent"
             >
               Seleccionar Imagen
             </label>
           </div>
           
           {photo && (
-            <Card className="overflow-hidden w-24 h-24 flex items-center justify-center">
+            <Card className="overflow-hidden w-24 h-24 flex items-center justify-center border border-border">
               <img
                 src={photo}
                 alt="Foto de perfil"
@@ -100,7 +100,7 @@ const PersonalInfoForm = () => {
             </Card>
           )}
         </div>
-        <p className="text-xs text-gray-500 mt-2">
+        <p className="text-xs text-muted-foreground mt-2">
           Recomendado: Imagen cuadrada, máximo 1MB
         </p>
       </div>

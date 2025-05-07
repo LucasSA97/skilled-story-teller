@@ -40,17 +40,17 @@ const FormWizard = () => {
     <div className="max-w-3xl mx-auto p-6">
       <div className="mb-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Crea tu Currículum</h1>
-          <span className="text-sm text-gray-500">
+          <h1 className="text-2xl font-bold">Crea tu Currículum</h1>
+          <span className="text-sm text-muted-foreground">
             Paso {currentStep + 1} de {steps.length}
           </span>
         </div>
         
         <div className="relative">
-          <div className="overflow-hidden h-2 mb-4 flex rounded bg-gray-200">
+          <div className="overflow-hidden h-2 mb-4 flex rounded bg-secondary">
             <div
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-              className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-300"
+              className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary transition-all duration-300"
             ></div>
           </div>
           <div className="flex justify-between">
@@ -59,14 +59,14 @@ const FormWizard = () => {
                 key={index}
                 onClick={() => goToStep(index)}
                 className={`flex flex-col items-center transition-colors duration-200 ${
-                  index <= currentStep ? "text-blue-600" : "text-gray-400"
+                  index <= currentStep ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 <span
                   className={`h-8 w-8 rounded-full flex items-center justify-center text-sm mb-1
-                  ${index < currentStep ? "bg-blue-500 text-white" : 
-                    index === currentStep ? "border-2 border-blue-500 text-blue-500" : 
-                    "border-2 border-gray-300 text-gray-400"}`}
+                  ${index < currentStep ? "bg-primary text-primary-foreground" : 
+                    index === currentStep ? "border-2 border-primary text-primary" : 
+                    "border-2 border-muted text-muted-foreground"}`}
                 >
                   {index + 1}
                 </span>
@@ -77,7 +77,7 @@ const FormWizard = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg p-6 shadow-md mb-6">
+      <div className="bg-card text-card-foreground rounded-lg p-6 shadow-md border border-border mb-6">
         <h2 className="text-xl font-semibold mb-4">{steps[currentStep].title}</h2>
         <CurrentStepComponent />
       </div>
