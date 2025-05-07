@@ -7,6 +7,7 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+  const isTemplatesPage = location.pathname === "/templates";
 
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-colors duration-300">
@@ -31,11 +32,13 @@ const Header = () => {
             </Link>
           </nav>
           <div className="flex items-center space-x-4">
-            <Link to="/templates">
-              <Button variant="outline" size="sm">
-                Cambiar Plantilla
-              </Button>
-            </Link>
+            {!isTemplatesPage && (
+              <Link to="/templates">
+                <Button variant="outline" size="sm">
+                  Cambiar Plantilla
+                </Button>
+              </Link>
+            )}
             <Link to="/form">
               <Button variant="outline" size="sm">
                 Editar CV
