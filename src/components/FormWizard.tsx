@@ -10,6 +10,7 @@ import EducationForm from "@/components/forms/EducationForm";
 import SkillsForm from "@/components/forms/SkillsForm";
 import LanguagesForm from "@/components/forms/LanguagesForm";
 import { useNavigate } from "react-router-dom";
+import RecommendationPanel from "@/components/RecommendationPanel";
 
 const steps = [
   { title: "Datos Personales", component: PersonalInfoForm },
@@ -82,7 +83,9 @@ const FormWizard = () => {
         <CurrentStepComponent />
       </div>
 
-      <div className="flex justify-between">
+      <RecommendationPanel step={currentStep} />
+
+      <div className="flex justify-between mt-6">
         <Button
           variant="outline"
           onClick={prevStep}
