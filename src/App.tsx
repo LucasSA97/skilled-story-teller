@@ -16,6 +16,7 @@ import AuthPage from "./pages/AuthPage";
 import FormPage from "./pages/FormPage";
 import TemplatesPage from "./pages/TemplatesPage";
 import PreviewPage from "./pages/PreviewPage";
+import MyCVsPage from "./pages/MyCVsPage";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -47,6 +48,11 @@ const App = () => (
                     <Route path="/preview" element={
                       <ProtectedRoute>
                         <PreviewPage />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/my-cvs" element={
+                      <ProtectedRoute>
+                        <MyCVsPage />
                       </ProtectedRoute>
                     } />
                     <Route path="*" element={<NotFound />} />

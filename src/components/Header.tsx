@@ -11,6 +11,7 @@ const Header = () => {
   const isHomePage = location.pathname === "/";
   const isTemplatesPage = location.pathname === "/templates";
   const isAuthPage = location.pathname === "/auth";
+  const isMyCVsPage = location.pathname === "/my-cvs";
 
   const handleLogout = async () => {
     await signOut();
@@ -41,18 +42,25 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
-                {!isTemplatesPage && (
+                <Link to="/my-cvs">
+                  <Button variant="outline" size="sm">
+                    Mis CVs
+                  </Button>
+                </Link>
+                {!isTemplatesPage && !isMyCVsPage && (
                   <Link to="/templates">
                     <Button variant="outline" size="sm">
                       Cambiar Plantilla
                     </Button>
                   </Link>
                 )}
-                <Link to="/form">
-                  <Button variant="outline" size="sm">
-                    Editar CV
-                  </Button>
-                </Link>
+                {!isMyCVsPage && (
+                  <Link to="/form">
+                    <Button variant="outline" size="sm">
+                      Editar CV
+                    </Button>
+                  </Link>
+                )}
                 <Button 
                   variant="ghost" 
                   size="sm" 
