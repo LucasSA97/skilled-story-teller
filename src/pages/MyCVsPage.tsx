@@ -33,7 +33,7 @@ const MyCVsPage = () => {
       try {
         setLoading(true);
         const { data, error } = await supabase
-          .from('cvs')
+          .from("cvs")
           .select('*')
           .eq('user_id', user.id)
           .order('updated_at', { ascending: false });
@@ -70,7 +70,7 @@ const MyCVsPage = () => {
     
     try {
       const { error } = await supabase
-        .from('cvs')
+        .from("cvs")
         .delete()
         .eq('id', id);
         
