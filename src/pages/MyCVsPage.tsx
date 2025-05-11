@@ -159,12 +159,15 @@ const MyCVsPage = () => {
     setSavingCV(true);
     
     try {
+      // Convert CVData to a plain object to ensure it's compatible with JSON
+      const cvDataForStorage = JSON.parse(JSON.stringify(cvState.data));
+
       const { data, error } = await supabase
         .from("cvs")
         .insert({
           name: cvName,
           template: cvState.selectedTemplate,
-          data: cvState.data,
+          data: cvDataForStorage,
           user_id: user.id
         })
         .select()
