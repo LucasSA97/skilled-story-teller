@@ -39,7 +39,17 @@ const MyCVsPage = () => {
           .order('updated_at', { ascending: false });
           
         if (error) throw error;
-        setSavedCVs(data || []);
+        
+        // Map the response to ensure template is of type TemplateType
+        const typedCVs = (data || []).map(cv => ({
+          id: cv.id,
+          name: cv.name,
+          template: cv.template as TemplateType, // Cast the string to TemplateType
+          created_at: cv.created_at,
+          updated_at: cv.updated_at
+        }));
+        
+        setSavedCVs(typedCVs);
       } catch (error: any) {
         console.error('Error fetching CVs:', error.message);
         toast.error("No se pudieron cargar los CVs");
