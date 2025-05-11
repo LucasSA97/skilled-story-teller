@@ -5,11 +5,14 @@ import { useAuth } from "@/context/AuthContext";
 import { useCVContext } from "@/context/CVContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Plus, Edit, Eye, Trash2 } from "lucide-react";
+import { FileText, Plus, Edit, Eye, Trash2, Save } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
-import { TemplateType } from "@/types";
+import { TemplateType, CVData } from "@/types";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface SavedCV {
   id: string;
@@ -21,10 +24,13 @@ interface SavedCV {
 
 const MyCVsPage = () => {
   const { user } = useAuth();
-  const { cvState } = useCVContext();
+  const { cvState, setTemplate } = useCVContext();
   const navigate = useNavigate();
   const [savedCVs, setSavedCVs] = useState<SavedCV[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [cvName, setCVName] = useState("");
+  const [savingCV, setSavingCV] = useState(false);
 
   useEffect(() => {
     const fetchSavedCVs = async () => {
@@ -65,14 +71,48 @@ const MyCVsPage = () => {
     navigate('/form');
   };
 
-  const handleViewCV = (id: string) => {
-    // In the future, this will load the CV and navigate to preview
-    navigate('/preview');
+  const handleViewCV = async (id: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("cvs")
+        .select('*')
+        .eq('id', id)
+        .single();
+        
+      if (error) throw error;
+      
+      if (data && data.data) {
+        // Load CV data into context
+        setTemplate(data.template as TemplateType);
+        // Navigate to preview with CV data
+        navigate('/preview');
+      }
+    } catch (error: any) {
+      console.error('Error loading CV:', error.message);
+      toast.error("No se pudo cargar el CV");
+    }
   };
 
-  const handleEditCV = (id: string) => {
-    // In the future, this will load the CV and navigate to form
-    navigate('/form');
+  const handleEditCV = async (id: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("cvs")
+        .select('*')
+        .eq('id', id)
+        .single();
+        
+      if (error) throw error;
+      
+      if (data && data.data) {
+        // Load CV data into context
+        setTemplate(data.template as TemplateType);
+        // Navigate to form with CV data
+        navigate('/form');
+      }
+    } catch (error: any) {
+      console.error('Error loading CV for edit:', error.message);
+      toast.error("No se pudo cargar el CV para editar");
+    }
   };
 
   const handleDeleteCV = async (id: string) => {
@@ -94,6 +134,67 @@ const MyCVsPage = () => {
     }
   };
 
+  const handleSaveCV = () => {
+    if (cvState.data.personalInfo.fullName) {
+      setCVName(cvState.data.personalInfo.fullName + " - CV");
+      setSaveDialogOpen(true);
+    } else {
+      // If no name is set, show save dialog with empty field
+      setCVName("");
+      setSaveDialogOpen(true);
+    }
+  };
+
+  const submitSaveCV = async () => {
+    if (!cvName.trim()) {
+      toast.error("Por favor, introduce un nombre para el CV");
+      return;
+    }
+    
+    if (!user) {
+      toast.error("Debes iniciar sesión para guardar un CV");
+      return;
+    }
+    
+    setSavingCV(true);
+    
+    try {
+      const { data, error } = await supabase
+        .from("cvs")
+        .insert({
+          name: cvName,
+          template: cvState.selectedTemplate,
+          data: cvState.data,
+          user_id: user.id
+        })
+        .select()
+        .single();
+        
+      if (error) throw error;
+      
+      // Add new CV to the list
+      if (data) {
+        const newCV = {
+          id: data.id,
+          name: data.name,
+          template: data.template as TemplateType,
+          created_at: data.created_at,
+          updated_at: data.updated_at
+        };
+        
+        setSavedCVs([newCV, ...savedCVs]);
+      }
+      
+      toast.success("CV guardado correctamente");
+      setSaveDialogOpen(false);
+    } catch (error: any) {
+      console.error('Error saving CV:', error.message);
+      toast.error("No se pudo guardar el CV");
+    } finally {
+      setSavingCV(false);
+    }
+  };
+
   return (
     <div className="container py-8 mx-auto max-w-4xl">
       <div className="flex items-center justify-between mb-6">
@@ -101,13 +202,21 @@ const MyCVsPage = () => {
           <h1 className="text-3xl font-bold">Mis CVs</h1>
           <p className="text-muted-foreground">Gestiona tus currículums creados</p>
         </div>
-        <Button 
-          onClick={handleCreateCV}
-          className="flex items-center gap-2"
-          disabled={savedCVs.length >= 2}
-        >
-          <Plus size={18} /> Crear CV
-        </Button>
+        <div className="space-x-2">
+          <Button 
+            onClick={handleSaveCV}
+            className="flex items-center gap-2"
+          >
+            <Save size={18} /> Guardar CV actual
+          </Button>
+          <Button 
+            onClick={handleCreateCV}
+            className="flex items-center gap-2"
+            disabled={savedCVs.length >= 2}
+          >
+            <Plus size={18} /> Crear CV nuevo
+          </Button>
+        </div>
       </div>
 
       {savedCVs.length >= 2 && (
@@ -179,6 +288,33 @@ const MyCVsPage = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Save CV Dialog */}
+      <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Guardar Currículum</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <Label htmlFor="cv-name">Nombre del CV</Label>
+            <Input 
+              id="cv-name" 
+              value={cvName} 
+              onChange={(e) => setCVName(e.target.value)} 
+              placeholder="Ej: CV Profesional" 
+              className="mt-2"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={submitSaveCV} disabled={savingCV}>
+              {savingCV ? "Guardando..." : "Guardar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
