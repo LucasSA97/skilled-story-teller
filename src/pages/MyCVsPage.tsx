@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useCVContext } from "@/context/CVContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, Plus, Edit, Eye, Trash2, Save } from "lucide-react";
@@ -25,6 +26,7 @@ interface SavedCV {
 const MyCVsPage = () => {
   const { user } = useAuth();
   const { cvState, setTemplate } = useCVContext();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [savedCVs, setSavedCVs] = useState<SavedCV[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,14 +60,14 @@ const MyCVsPage = () => {
         setSavedCVs(typedCVs);
       } catch (error: any) {
         console.error('Error fetching CVs:', error.message);
-        toast.error("No se pudieron cargar los CVs");
+        toast.error(t("deleteError"));
       } finally {
         setLoading(false);
       }
     };
 
     fetchSavedCVs();
-  }, [user]);
+  }, [user, t]);
 
   const handleCreateCV = () => {
     navigate('/form');
@@ -89,7 +91,7 @@ const MyCVsPage = () => {
       }
     } catch (error: any) {
       console.error('Error loading CV:', error.message);
-      toast.error("No se pudo cargar el CV");
+      toast.error(t("loadError"));
     }
   };
 
@@ -111,12 +113,12 @@ const MyCVsPage = () => {
       }
     } catch (error: any) {
       console.error('Error loading CV for edit:', error.message);
-      toast.error("No se pudo cargar el CV para editar");
+      toast.error(t("loadEditError"));
     }
   };
 
   const handleDeleteCV = async (id: string) => {
-    if (!window.confirm("¿Estás seguro de que deseas eliminar este CV?")) return;
+    if (!window.confirm(t("deleteConfirm"))) return;
     
     try {
       const { error } = await supabase
@@ -127,10 +129,10 @@ const MyCVsPage = () => {
       if (error) throw error;
       
       setSavedCVs(savedCVs.filter(cv => cv.id !== id));
-      toast.success("CV eliminado correctamente");
+      toast.success(t("deletedSuccessfully"));
     } catch (error: any) {
       console.error('Error deleting CV:', error.message);
-      toast.error("No se pudo eliminar el CV");
+      toast.error(t("deleteError"));
     }
   };
 
@@ -147,12 +149,12 @@ const MyCVsPage = () => {
 
   const submitSaveCV = async () => {
     if (!cvName.trim()) {
-      toast.error("Por favor, introduce un nombre para el CV");
+      toast.error(t("enterCVName"));
       return;
     }
     
     if (!user) {
-      toast.error("Debes iniciar sesión para guardar un CV");
+      toast.error(t("loginToSave"));
       return;
     }
     
@@ -188,11 +190,11 @@ const MyCVsPage = () => {
         setSavedCVs([newCV, ...savedCVs]);
       }
       
-      toast.success("CV guardado correctamente");
+      toast.success(t("savedSuccessfully"));
       setSaveDialogOpen(false);
     } catch (error: any) {
       console.error('Error saving CV:', error.message);
-      toast.error("No se pudo guardar el CV");
+      toast.error(t("saveError"));
     } finally {
       setSavingCV(false);
     }
@@ -202,22 +204,22 @@ const MyCVsPage = () => {
     <div className="container py-8 mx-auto max-w-4xl">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold">Mis CVs</h1>
-          <p className="text-muted-foreground">Gestiona tus currículums creados</p>
+          <h1 className="text-3xl font-bold">{t('myCVsTitle')}</h1>
+          <p className="text-muted-foreground">{t('manageCVs')}</p>
         </div>
         <div className="space-x-2">
           <Button 
             onClick={handleSaveCV}
             className="flex items-center gap-2"
           >
-            <Save size={18} /> Guardar CV actual
+            <Save size={18} /> {t('saveCurrentCV')}
           </Button>
           <Button 
             onClick={handleCreateCV}
             className="flex items-center gap-2"
             disabled={savedCVs.length >= 2}
           >
-            <Plus size={18} /> Crear CV nuevo
+            <Plus size={18} /> {t('createNewCV')}
           </Button>
         </div>
       </div>
@@ -226,7 +228,7 @@ const MyCVsPage = () => {
         <Card className="mb-6 bg-yellow-50 border-yellow-200">
           <CardContent className="pt-4">
             <p className="text-yellow-800">
-              Has alcanzado el límite de 2 CVs. Para crear uno nuevo, elimina alguno existente.
+              {t('limitReached')}
             </p>
           </CardContent>
         </Card>
@@ -240,29 +242,29 @@ const MyCVsPage = () => {
         <Card className="text-center py-12">
           <CardContent>
             <FileText className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">No tienes CVs guardados</h3>
-            <p className="text-muted-foreground mb-4">Crea tu primer CV para comenzar</p>
+            <h3 className="text-lg font-medium mb-2">{t('noCVs')}</h3>
+            <p className="text-muted-foreground mb-4">{t('createFirstCV')}</p>
             <Button onClick={handleCreateCV}>
-              <Plus size={16} className="mr-2" /> Crear mi primer CV
+              <Plus size={16} className="mr-2" /> {t('createMyFirstCV')}
             </Button>
           </CardContent>
         </Card>
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>CVs guardados</CardTitle>
+            <CardTitle>{t('savedCVs')}</CardTitle>
             <CardDescription>
-              Tienes {savedCVs.length} {savedCVs.length === 1 ? 'CV' : 'CVs'} guardados
+              {t('youHave')} {savedCVs.length} {savedCVs.length === 1 ? t('cv') : t('cvs')} {t('saved')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Nombre</TableHead>
-                  <TableHead>Plantilla</TableHead>
-                  <TableHead>Última actualización</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
+                  <TableHead>{t('name')}</TableHead>
+                  <TableHead>{t('template')}</TableHead>
+                  <TableHead>{t('lastUpdate')}</TableHead>
+                  <TableHead className="text-right">{t('actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -296,24 +298,24 @@ const MyCVsPage = () => {
       <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Guardar Currículum</DialogTitle>
+            <DialogTitle>{t('saveCVTitle')}</DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            <Label htmlFor="cv-name">Nombre del CV</Label>
+            <Label htmlFor="cv-name">{t('cvName')}</Label>
             <Input 
               id="cv-name" 
               value={cvName} 
               onChange={(e) => setCVName(e.target.value)} 
-              placeholder="Ej: CV Profesional" 
+              placeholder={t('cvNamePlaceholder')} 
               className="mt-2"
             />
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>
-              Cancelar
+              {t('cancel')}
             </Button>
             <Button onClick={submitSaveCV} disabled={savingCV}>
-              {savingCV ? "Guardando..." : "Guardar"}
+              {savingCV ? t('saving') : t('save')}
             </Button>
           </DialogFooter>
         </DialogContent>
