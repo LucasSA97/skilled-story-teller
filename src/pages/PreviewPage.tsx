@@ -19,7 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Download } from "lucide-react";
+import { Download, FileEdit, Palette } from "lucide-react";
 
 // Lazy loading para componentes PDF pesados - mantenemos por si se arregla en el futuro
 const ModernPDF = lazy(() => import("@/components/pdf/ModernPDF"));
@@ -41,9 +41,9 @@ const PreviewPage = () => {
     
     if (!hasPersonalInfo || !hasTemplate) {
       toast({
-        title: "Datos incompletos",
-        description: "Por favor, completa al menos la información personal básica",
-        variant: "destructive",
+        title: "Información incompleta",
+        description: "Para ver tu CV, completa al menos tus datos personales básicos",
+        variant: "default",
       });
       navigate("/form");
     } else {
@@ -119,13 +119,28 @@ const PreviewPage = () => {
     }
   };
 
-  // Si los datos no están listos, no renderizar el contenido principal
+  // Si los datos no están listos, mostrar una página de onboarding más amigable
   if (!isDataReady) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center transition-colors duration-300">
-        <div className="text-center p-8">
-          <h2 className="text-xl font-semibold mb-4 text-foreground">Preparando tu CV...</h2>
-          <Button onClick={() => navigate("/form")}>Volver al formulario</Button>
+      <div className="min-h-screen bg-background flex items-center justify-center p-6 transition-colors duration-300">
+        <div className="bg-card text-card-foreground rounded-lg shadow-lg border p-8 max-w-md mx-auto">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-6 text-foreground">¡Casi estamos listos!</h2>
+            <p className="text-muted-foreground mb-8">
+              Para crear tu CV necesitamos algunos datos básicos sobre ti. Completa el formulario 
+              para ver tu CV con la plantilla seleccionada.
+            </p>
+            <div className="flex flex-col gap-4">
+              <Button onClick={() => navigate("/form")} className="w-full">
+                <FileEdit className="mr-2 h-4 w-4" />
+                Completar mi información
+              </Button>
+              <Button variant="outline" onClick={() => navigate("/templates")} className="w-full">
+                <Palette className="mr-2 h-4 w-4" />
+                Explorar plantillas
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -174,10 +189,12 @@ const PreviewPage = () => {
                 </DropdownMenu>
                 
                 <Button variant="outline" onClick={() => navigate("/templates")}>
+                  <Palette className="mr-2 h-4 w-4" />
                   Cambiar Plantilla
                 </Button>
                 
                 <Button variant="outline" onClick={() => navigate("/form")}>
+                  <FileEdit className="mr-2 h-4 w-4" />
                   Editar Información
                 </Button>
               </div>

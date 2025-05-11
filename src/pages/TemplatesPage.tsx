@@ -3,10 +3,12 @@ import { useCVContext } from "@/context/CVContext";
 import { Button } from "@/components/ui/button";
 import { TemplateType } from "@/types";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 const TemplatesPage = () => {
   const { cvState, setTemplate } = useCVContext();
   const navigate = useNavigate();
+  const { toast } = useToast();
   
   const templates: { id: TemplateType; name: string; description: string, image?: string }[] = [
     {
@@ -37,7 +39,20 @@ const TemplatesPage = () => {
 
   const handleSelectTemplate = (templateId: TemplateType) => {
     setTemplate(templateId);
-    navigate("/preview");
+    
+    // Check if user has filled at least the personal info section
+    const hasPersonalInfo = cvState?.data?.personalInfo?.fullName;
+    
+    if (!hasPersonalInfo) {
+      // Instead of navigating with an error, show a friendly toast message
+      toast({
+        title: "Plantilla seleccionada",
+        description: "Completa la información básica para ver tu CV con esta plantilla",
+      });
+      navigate("/form");
+    } else {
+      navigate("/preview");
+    }
   };
 
   return (
@@ -75,7 +90,9 @@ const TemplatesPage = () => {
                   className={cvState.selectedTemplate === template.id ? 'bg-primary' : ''}
                   onClick={() => handleSelectTemplate(template.id)}
                 >
-                  {cvState.selectedTemplate === template.id ? 'Plantilla Seleccionada' : 'Seleccionar Plantilla'}
+                  {cvState.selectedTemplate === template.id 
+                    ? 'Plantilla Seleccionada' 
+                    : 'Seleccionar Plantilla'}
                 </Button>
               </div>
             </div>
