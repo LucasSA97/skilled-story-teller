@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    allowedHosts: "all", // Allow all hosts to connect - "all" is special value in Vite
+    allowedHosts: true, // Changed from "all" string to boolean true to match Vite's type definition
   },
   plugins: [
     react(),
