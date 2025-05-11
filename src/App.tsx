@@ -37,23 +37,12 @@ const App = () => (
                     <Routes>
                       <Route path="/" element={<LandingPage />} />
                       <Route path="/auth" element={<AuthPage />} />
-                      <Route path="/form" element={
-                        <ProtectedRoute>
-                          <FormPage />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/templates" element={
-                        <ProtectedRoute>
-                          <TemplatesPage />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/preview" element={
-                        <ProtectedRoute>
-                          <PreviewPage />
-                        </ProtectedRoute>
-                      } />
+                      {/* Form page is now accessible without authentication */}
+                      <Route path="/form" element={<FormPage />} />
+                      <Route path="/templates" element={<TemplatesPage />} />
+                      <Route path="/preview" element={<PreviewPage />} />
                       <Route path="/my-cvs" element={
-                        <ProtectedRoute>
+                        <ProtectedRoute requireAuth={true}>
                           <MyCVsPage />
                         </ProtectedRoute>
                       } />

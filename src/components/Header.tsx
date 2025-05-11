@@ -9,7 +9,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, signOut, isAuthenticated } = useAuth();
   const { t } = useLanguage();
   const isHomePage = location.pathname === "/";
   const isTemplatesPage = location.pathname === "/templates";
@@ -44,7 +44,7 @@ const Header = () => {
           </nav>
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
-            {user ? (
+            {isAuthenticated ? (
               <>
                 <Link to="/my-cvs">
                   <Button variant="outline" size="sm">
@@ -75,17 +75,26 @@ const Header = () => {
                 </Button>
               </>
             ) : (
-              !isAuthPage && (
-                <Link to="/auth">
-                  <Button 
-                    variant="default" 
-                    size="sm"
-                    className="flex items-center gap-2"
-                  >
-                    <LogIn className="h-4 w-4" /> {t('signIn')}
-                  </Button>
-                </Link>
-              )
+              <>
+                {!isAuthPage && (
+                  <Link to="/auth">
+                    <Button 
+                      variant="default" 
+                      size="sm"
+                      className="flex items-center gap-2"
+                    >
+                      <LogIn className="h-4 w-4" /> {t('signIn')}
+                    </Button>
+                  </Link>
+                )}
+                {!location.pathname.includes("/form") && (
+                  <Link to="/form">
+                    <Button variant="outline" size="sm">
+                      {t('createCV')}
+                    </Button>
+                  </Link>
+                )}
+              </>
             )}
           </div>
         </div>

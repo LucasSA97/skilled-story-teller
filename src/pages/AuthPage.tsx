@@ -5,12 +5,14 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileText } from "lucide-react";
+import { FileText, LogIn, UserPlus } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useLanguage } from "@/context/LanguageContext";
 
 const AuthPage = () => {
   const { user, loading, signIn, signUp } = useAuth();
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,31 +48,31 @@ const AuthPage = () => {
   }
 
   return (
-    <div className="container flex min-h-screen">
+    <div className="container flex min-h-screen bg-gradient-to-b from-background to-background/95">
       <div className="flex flex-1 flex-col items-center justify-center py-12">
         <div className="mx-auto grid w-full max-w-md gap-6">
           <div className="flex flex-col space-y-2 text-center">
             <div className="flex justify-center mb-4">
               <FileText className="h-16 w-16 text-primary" />
             </div>
-            <h1 className="text-3xl font-bold">CV Builder</h1>
+            <h1 className="text-3xl font-bold">{t('cvBuilder')}</h1>
             <p className="text-balance text-muted-foreground">
-              Crea tu currículum profesional en minutos
+              {t('createProfessionalCV')}
             </p>
           </div>
           
           <Card className="border-2 shadow-lg bg-card">
             <Tabs defaultValue="login" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login" className="text-base py-3">Iniciar Sesión</TabsTrigger>
-                <TabsTrigger value="signup" className="text-base py-3">Registrarse</TabsTrigger>
+                <TabsTrigger value="login" className="text-base py-3">{t('signIn')}</TabsTrigger>
+                <TabsTrigger value="signup" className="text-base py-3">{t('signUp')}</TabsTrigger>
               </TabsList>
               
               <TabsContent value="login">
                 <CardHeader>
-                  <CardTitle className="text-2xl text-center">Bienvenido de nuevo</CardTitle>
+                  <CardTitle className="text-2xl text-center">{t('welcomeBack')}</CardTitle>
                   <CardDescription className="text-center">
-                    Ingresa tus credenciales para acceder a tu cuenta
+                    {t('enterCredentials')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -88,7 +90,7 @@ const AuthPage = () => {
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="login-password">Contraseña</Label>
+                      <Label htmlFor="login-password">{t('password')}</Label>
                     </div>
                     <Input 
                       id="login-password" 
@@ -103,20 +105,24 @@ const AuthPage = () => {
                 </CardContent>
                 <CardFooter>
                   <Button 
-                    className="w-full h-12 text-base"
+                    className="w-full h-12 text-base bg-primary hover:bg-primary/90"
                     onClick={() => handleAuth("login")}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Iniciando sesión..." : "Iniciar Sesión"}
+                    {isSubmitting ? t('signingIn') : (
+                      <>
+                        <LogIn className="mr-2 h-5 w-5" /> {t('signIn')}
+                      </>
+                    )}
                   </Button>
                 </CardFooter>
               </TabsContent>
               
               <TabsContent value="signup">
                 <CardHeader>
-                  <CardTitle className="text-2xl text-center">Crear una cuenta</CardTitle>
+                  <CardTitle className="text-2xl text-center">{t('createAccount')}</CardTitle>
                   <CardDescription className="text-center">
-                    Regístrate para comenzar a crear tus currículums
+                    {t('registerToCreateCVs')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -133,7 +139,7 @@ const AuthPage = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Contraseña</Label>
+                    <Label htmlFor="signup-password">{t('password')}</Label>
                     <Input 
                       id="signup-password" 
                       type="password"
@@ -147,20 +153,33 @@ const AuthPage = () => {
                 </CardContent>
                 <CardFooter>
                   <Button 
-                    className="w-full h-12 text-base"
+                    className="w-full h-12 text-base bg-primary hover:bg-primary/90"
                     onClick={() => handleAuth("signup")}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Registrando..." : "Registrarse"}
+                    {isSubmitting ? t('registering') : (
+                      <>
+                        <UserPlus className="mr-2 h-5 w-5" /> {t('signUp')}
+                      </>
+                    )}
                   </Button>
                 </CardFooter>
               </TabsContent>
             </Tabs>
           </Card>
           
-          <p className="px-8 text-center text-sm text-muted-foreground">
-            Al continuar, aceptas nuestros términos de servicio y política de privacidad.
-          </p>
+          <div className="flex flex-col gap-2 text-center">
+            <p className="text-sm text-muted-foreground">
+              {t('termsPrivacyNotice')}
+            </p>
+            <Button 
+              variant="outline" 
+              className="mx-auto"
+              onClick={() => window.location.href = '/form'}
+            >
+              {t('continueWithoutAccount')}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

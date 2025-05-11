@@ -4,10 +4,11 @@ import { useAuth } from "@/context/AuthContext";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
+  requireAuth?: boolean;
 };
 
-const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { user, loading } = useAuth();
+const ProtectedRoute = ({ children, requireAuth = true }: ProtectedRouteProps) => {
+  const { user, loading, isAuthenticated } = useAuth();
 
   if (loading) {
     return (
@@ -17,7 +18,8 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  if (!user) {
+  // If route requires auth and user is not authenticated
+  if (requireAuth && !isAuthenticated) {
     return <Navigate to="/auth" />;
   }
 

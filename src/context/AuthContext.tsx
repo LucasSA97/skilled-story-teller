@@ -12,6 +12,7 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  isAuthenticated: boolean;
 };
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -20,6 +21,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<AuthSession | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       (event, newSession) => {
         setSession(newSession);
         setUser(newSession?.user ?? null);
+        setIsAuthenticated(!!newSession?.user);
 
         if (event === "SIGNED_IN" && newSession) {
           toast.success("Inicio de sesión exitoso");
@@ -35,7 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
         if (event === "SIGNED_OUT") {
           toast.info("Sesión cerrada");
-          navigate("/auth");
+          navigate("/");
         }
       }
     );
@@ -44,6 +47,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
+      setIsAuthenticated(!!currentSession?.user);
       setLoading(false);
     });
 
@@ -103,7 +107,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ session, user, loading, signIn, signUp, signOut }}
+      value={{ session, user, loading, signIn, signUp, signOut, isAuthenticated }}
     >
       {children}
     </AuthContext.Provider>
