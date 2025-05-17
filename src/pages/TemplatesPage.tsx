@@ -15,25 +15,25 @@ const TemplatesPage = () => {
       id: "modern",
       name: "Moderno",
       description: "Diseño limpio y profesional con elementos modernos y uso de color.",
-      image: '/public/templates/ModernTemplate.png'
+      image: '/templates/ModernTemplate.png'
     },
     {
       id: "classic",
       name: "Clásico",
       description: "Diseño tradicional y elegante, ideal para sectores conservadores.",
-      image: '/public/templates/PlantillaClasic.png'
+      image: '/templates/PlantillaClasic.png'
     },
     {
       id: "creative",
       name: "Creativo",
       description: "Diseño audaz y diferente para destacar tu personalidad.",
-      image: '/public/templates/PlantillaModerna.png'
+      image: '/templates/PlantillaModerna.png'
     },
     {
       id: "minimal",
       name: "Minimalista",
       description: "Diseño simple y directo centrado en el contenido y legibilidad.",
-      image: '/public/templates/MinimalistTemplate.png'
+      image: '/templates/MinimalistTemplate.png'
     },
   ];
 
