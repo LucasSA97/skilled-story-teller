@@ -34,17 +34,17 @@ const ExperienceItem = ({
   };
 
   return (
-    <Card className="bg-gray-50 relative mb-6">
+    <Card className=" relative mb-6">
       <Button
         variant="ghost"
         size="sm"
-        className="absolute right-2 top-2 h-8 w-8 p-0 text-gray-500 hover:text-red-500"
+        className="absolute right-2 top-2 h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
         onClick={() => onRemove(experience.id)}
       >
         <X size={18} />
       </Button>
       
-      <CardContent className="pt-6 pb-4">
+      <CardContent className="pt-6 pb-4 ">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <Label htmlFor={`position-${experience.id}`}>Puesto*</Label>
@@ -162,8 +162,8 @@ const WorkExperienceForm = () => {
   return (
     <div className="space-y-6">
       {workExperience.length === 0 ? (
-        <div className="text-center py-8 bg-gray-50 rounded-md">
-          <p className="text-gray-500 mb-4">No has agregado experiencia laboral todavía.</p>
+        <div className="text-center py-8 bg-secondary/50 rounded-md">
+          <p className="text-muted-foreground mb-4">No has agregado experiencia laboral todavía.</p>
           <Button onClick={handleAddExperience}>
             <Plus size={16} className="mr-2" />
             Agregar Experiencia

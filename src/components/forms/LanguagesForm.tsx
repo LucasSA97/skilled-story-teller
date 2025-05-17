@@ -87,15 +87,15 @@ const LanguagesForm = () => {
         <Label className="mb-2 block">Idiomas</Label>
         
         {languages.length === 0 ? (
-          <div className="text-center py-6 bg-gray-50 rounded-md">
-            <p className="text-gray-500">Añade los idiomas que conoces</p>
+          <div className="text-center py-6 rounded-md bg-secondary/50">
+            <p className="text-muted-foreground">Añade los idiomas que conoces</p>
           </div>
         ) : (
           <div className="space-y-3">
             {languages.map((language) => (
               <div
                 key={language.id}
-                className="flex items-center justify-between bg-gray-50 rounded-md p-3"
+                className="flex items-center justify-between rounded-md p-3 bg-card border border-border"
               >
                 <span className="font-medium">{language.name}</span>
                 
@@ -121,7 +121,7 @@ const LanguagesForm = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 w-8 p-0 text-gray-500 hover:text-red-500"
+                    className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
                     onClick={() => removeLanguage(language.id)}
                   >
                     <X size={18} />
