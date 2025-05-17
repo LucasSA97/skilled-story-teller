@@ -21,6 +21,9 @@ export const translations = {
     'editCV': 'Edit CV',
     'signOut': 'Sign Out',
     'signIn': 'Sign In',
+    'signUp': 'Sign Up',
+    'createProfessionalCV': 'Create a professional resume',
+    'createCV': 'Create CV',
     
     // MyCVs Page
     'myCVsTitle': 'My CVs',
@@ -54,6 +57,12 @@ export const translations = {
     'loginToSave': 'You must be logged in to save a CV',
     'savedSuccessfully': 'CV saved successfully',
     'saveError': 'Could not save the CV',
+    'continueWithoutAccount': 'Continue without account',
+    'welcomeBack': 'Welcome back',
+    'enterCredentials': 'Enter your credentials to access your account',
+    'termsPrivacyNotice': 'By continuing, you agree to our terms and conditions and privacy policy.',
+    'createAccount': 'Create account',
+    'registerToCreateCVs': 'Register to create and manage your CVs',
     
     // Other sections as needed
   },
@@ -66,6 +75,9 @@ export const translations = {
     'editCV': 'Editar CV',
     'signOut': 'Salir',
     'signIn': 'Iniciar Sesión',
+    'signUp': 'Registrarse',
+    'createProfessionalCV': 'Crea un currículum profesional',
+    'createCV': 'Crear CV',
     
     // MyCVs Page
     'myCVsTitle': 'Mis CVs',
@@ -99,6 +111,12 @@ export const translations = {
     'loginToSave': 'Debes iniciar sesión para guardar un CV',
     'savedSuccessfully': 'CV guardado correctamente',
     'saveError': 'No se pudo guardar el CV',
+    'continueWithoutAccount': 'Continuar sin cuenta',
+    'welcomeBack': 'Bienvenido de vuelta',
+    'enterCredentials': 'Ingresa tus credenciales para acceder a tu cuenta',
+    'termsPrivacyNotice': 'Al continuar, aceptas nuestros términos y condiciones y la política de privacidad.',
+    'createAccount': 'Crear cuenta',
+    'registerToCreateCVs': 'Regístrate para crear y gestionar tus CVs',
     
     // Other sections as needed
   }

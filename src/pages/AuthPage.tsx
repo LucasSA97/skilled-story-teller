@@ -64,8 +64,8 @@ const AuthPage = () => {
           <Card className="border-2 shadow-lg bg-card">
             <Tabs defaultValue="login" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login" className="text-base py-3">{t('signIn')}</TabsTrigger>
-                <TabsTrigger value="signup" className="text-base py-3">{t('signUp')}</TabsTrigger>
+                <TabsTrigger value="login" >{t('signIn')}</TabsTrigger>
+                <TabsTrigger value="signup" >{t('signUp')}</TabsTrigger>
               </TabsList>
               
               <TabsContent value="login">
