@@ -5,13 +5,14 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileText, LogIn, UserPlus } from "lucide-react";
+import { FileText, LogIn, UserPlus, Google } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/context/LanguageContext";
 
 const AuthPage = () => {
-  const { user, loading, signIn, signUp } = useAuth();
+  const { user, loading, signIn, signUp, signInWithGoogle } = useAuth();
   const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,6 +37,14 @@ const AuthPage = () => {
       console.error("Authentication error:", error);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.error("Google sign in error:", error);
     }
   };
 
@@ -102,10 +111,8 @@ const AuthPage = () => {
                       className="h-12"
                     />
                   </div>
-                </CardContent>
-                <CardFooter>
                   <Button 
-                    className="w-full h-12 text-base bg-primary hover:bg-primary/90"
+                    className="w-full h-12 text-base"
                     onClick={() => handleAuth("login")}
                     disabled={isSubmitting}
                   >
@@ -115,7 +122,28 @@ const AuthPage = () => {
                       </>
                     )}
                   </Button>
-                </CardFooter>
+                  
+                  <div className="relative my-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <Separator className="w-full" />
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="bg-background px-2 text-xs text-muted-foreground">
+                        {t('orContinueWith')}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <Button
+                    variant="outline"
+                    className="w-full h-12"
+                    onClick={handleGoogleSignIn}
+                    disabled={isSubmitting}
+                  >
+                    <Google className="mr-2 h-5 w-5" />
+                    {t('continueWithGoogle')}
+                  </Button>
+                </CardContent>
               </TabsContent>
               
               <TabsContent value="signup">
@@ -150,10 +178,9 @@ const AuthPage = () => {
                       className="h-12"
                     />
                   </div>
-                </CardContent>
-                <CardFooter>
+                  
                   <Button 
-                    className="w-full h-12 text-base bg-primary hover:bg-primary/90"
+                    className="w-full h-12 text-base"
                     onClick={() => handleAuth("signup")}
                     disabled={isSubmitting}
                   >
@@ -163,7 +190,28 @@ const AuthPage = () => {
                       </>
                     )}
                   </Button>
-                </CardFooter>
+                  
+                  <div className="relative my-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <Separator className="w-full" />
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="bg-background px-2 text-xs text-muted-foreground">
+                        {t('orContinueWith')}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <Button
+                    variant="outline"
+                    className="w-full h-12"
+                    onClick={handleGoogleSignIn}
+                    disabled={isSubmitting}
+                  >
+                    <Google className="mr-2 h-5 w-5" />
+                    {t('continueWithGoogle')}
+                  </Button>
+                </CardContent>
               </TabsContent>
             </Tabs>
           </Card>
