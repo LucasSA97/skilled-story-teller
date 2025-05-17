@@ -4,18 +4,20 @@ import { Button } from "@/components/ui/button";
 import { TemplateType } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const TemplatesPage = () => {
   const { cvState, setTemplate } = useCVContext();
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  const templates: { id: TemplateType; name: string; description: string, image?: string }[] = [
+  const templates: { id: TemplateType; name: string; description: string, image?: string, badge?: string }[] = [
     {
       id: "modern",
       name: "Moderno",
       description: "Diseño limpio y profesional con elementos modernos y uso de color.",
-      image: '/templates/ModernTemplate.png'
+      image: '/templates/ModernTemplate.png',
+      badge: "Best Seller"
     },
     {
       id: "classic",
@@ -27,13 +29,15 @@ const TemplatesPage = () => {
       id: "creative",
       name: "Creativo",
       description: "Diseño audaz y diferente para destacar tu personalidad.",
-      image: '/templates/PlantillaModerna.png'
+      image: '/templates/PlantillaModerna.png',
+      badge: "20% off"
     },
     {
       id: "minimal",
       name: "Minimalista",
       description: "Diseño simple y directo centrado en el contenido y legibilidad.",
-      image: '/templates/MinimalistTemplate.png'
+      image: '/templates/MinimalistTemplate.png',
+      badge: "New"
     },
   ];
 
@@ -70,24 +74,35 @@ const TemplatesPage = () => {
           {templates.map((template) => (
             <div 
               key={template.id}
-              className={`bg-card text-card-foreground border rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg ${
+              className={`relative overflow-hidden rounded-3xl transition-all hover:shadow-lg ${
                 cvState.selectedTemplate === template.id ? 'ring-2 ring-primary' : ''
               }`}
             >
-              <div className="h-64 bg-muted border-b relative">
-                <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                  <img 
-                    src={template.image}
-                    alt={`Vista previa de la plantilla ${template.name}`}
-                    className="object-cover h-full"
-                  />
+              {template.badge && (
+                <div className="absolute top-3 right-3 bg-black/25 text-white text-xs font-medium px-2 py-1 rounded-full backdrop-blur-sm">
+                  {template.badge}
                 </div>
+              )}
+              
+              <div 
+                className="h-80 bg-gradient-to-b from-amber-300 to-amber-500 relative"
+                style={{
+                  backgroundImage: template.image ? `url(${template.image})` : undefined,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              >
+                {!template.image && (
+                  <Skeleton className="h-full w-full" />
+                )}
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">{template.name}</h3>
+              
+              <div className="p-6 bg-card">
+                <h3 className="text-2xl font-bold mb-2">{template.name}</h3>
                 <p className="text-muted-foreground mb-4">{template.description}</p>
+                
                 <Button 
-                  className={cvState.selectedTemplate === template.id ? 'bg-primary' : ''}
+                  className="w-full rounded-full py-6"
                   onClick={() => handleSelectTemplate(template.id)}
                 >
                   {cvState.selectedTemplate === template.id 
