@@ -9,8 +9,6 @@ import MinimalTemplate from "@/components/templates/MinimalTemplate";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { 
-  exportToTextFile, 
-  exportToHTML,
   exportToPDF 
 } from "@/services/exportService";
 import {
@@ -70,7 +68,7 @@ const PreviewPage = () => {
   };
   
   // Función para manejar la exportación del CV
-  const handleExport = async (format: 'text' | 'html' | 'pdf') => {
+  const handleExport = async (format: 'pdf') => {
     if (!isDataReady) {
       toast({
         title: "No se puede exportar",
@@ -92,12 +90,6 @@ const PreviewPage = () => {
             filename: `${fileName}.pdf`,
             template: cvState.selectedTemplate
           });
-          break;
-        case 'text':
-          success = exportToTextFile({ data: cvState.data, filename: `${fileName}.txt` });
-          break;
-        case 'html':
-          success = exportToHTML({ data: cvState.data, filename: `${fileName}.html` });
           break;
       }
       
@@ -176,12 +168,6 @@ const PreviewPage = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => handleExport('html')}>
-                      Exportar como HTML
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleExport('text')}>
-                      Exportar como TXT
-                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleExport('pdf')}>
                       Exportar como PDF
                     </DropdownMenuItem>
