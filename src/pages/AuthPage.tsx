@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileText, LogIn, UserPlus, Google } from "lucide-react";
+import { FileText, LogIn, UserPlus, Mail } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
@@ -140,7 +140,7 @@ const AuthPage = () => {
                     onClick={handleGoogleSignIn}
                     disabled={isSubmitting}
                   >
-                    <Google className="mr-2 h-5 w-5" />
+                    <Mail className="mr-2 h-5 w-5" />
                     {t('continueWithGoogle')}
                   </Button>
                 </CardContent>
@@ -208,7 +208,7 @@ const AuthPage = () => {
                     onClick={handleGoogleSignIn}
                     disabled={isSubmitting}
                   >
-                    <Google className="mr-2 h-5 w-5" />
+                    <Mail className="mr-2 h-5 w-5" />
                     {t('continueWithGoogle')}
                   </Button>
                 </CardContent>
