@@ -76,10 +76,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithGoogle = async () => {
     try {
+      // Get the current hostname - use the window.location.href to get the full URL
+      // This ensures we properly handle both local and deployed environments
+      const currentUrl = window.location.href;
+      const redirectUrl = new URL("/auth", currentUrl).href;
+      
+      console.log("Redirecting to:", redirectUrl); // Debug log
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth`,
+          redirectTo: redirectUrl,
         },
       });
 
